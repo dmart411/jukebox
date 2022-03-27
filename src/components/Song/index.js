@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-const Song = ({ song }) => {
+const Song = ({ song, active }) => {
   const [favorited, setFavorited] = useState(false);
 
   return (
-      <div className="row song border-bottom border-secondary">
+      <div className={active ? 'row song border-bottom border-secondary' : 'hidden'}>
         <div className="track-number">
           {song.song_order}
         </div>
