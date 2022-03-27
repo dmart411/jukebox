@@ -1,6 +1,4 @@
-import Albums from '../Albums';
-import "../../index.css";
-
+import Albums from "../Albums";
 
 function App() {
   return (
