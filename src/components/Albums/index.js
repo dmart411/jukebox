@@ -1,95 +1,125 @@
+import { useState, useEffect } from "react";
 import SwiperCore, { EffectCoverflow } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Collapse } from "react-bootstrap";
+import axios from "axios";
+import Song from "../Song";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/bundle";
 
-const albums = [
-  {
-    id: 1,
-    name: "If Your'e Reading This It's Too Late",
-    artist_name: "DRAKE",
-    cover_photo_url: "https://s3.amazonaws.com/hakuapps/prod/album-1.png",
-  },
-  {
-    id: 2,
-    name: "Hotter Than July",
-    artist_name: "Stevie Wonder",
-    cover_photo_url: "https://s3.amazonaws.com/hakuapps/prod/album-2.png",
-  },
-  {
-    id: 3,
-    name: "Overexposed",
-    artist_name: "Maroon 5",
-    cover_photo_url: "https://s3.amazonaws.com/hakuapps/prod/album-3.png",
-  },
-  {
-    id: 4,
-    name: "Hit n Run Phase One",
-    artist_name: "PRINCE",
-    cover_photo_url: "https://s3.amazonaws.com/hakuapps/prod/album-4.png",
-  },
-  {
-    id: 5,
-    name: "Brothers",
-    artist_name: "The Black Keys",
-    cover_photo_url: "https://s3.amazonaws.com/hakuapps/prod/album-5.png",
-  },
-];
-
 const Albums = () => {
+  const [open, setOpen] = useState(true);
+  const [albums, setAlbums] = useState([]);
+  const [songs, setSongs] = useState([]);
+  const [current, setCurrent] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let allSongs = [];
+      axios.get("http://jukebox-proxy.herokuapp.com/albums").then((res) => {
+        setAlbums(res.data);
+        res.data.forEach((album) => {
+          axios
+            .get(`https://jukebox-proxy.herokuapp.com/songs/${album.id}`)
+            .then((res) => {
+              allSongs = [...allSongs, ...res.data];
+            })
+            .then((res) => {
+              setSongs(allSongs);
+            });
+        });
+      });
+    };
+
+    fetchData();
+  }, []);
+
   SwiperCore.use([EffectCoverflow]);
 
-  return (
-    <Swiper
-      effect="coverflow"
-      centeredSlides="true"
-      spaceBetween={0}
-      slidesPerView={3}
-      loop="true"
-      coverflowEffect={{
-        rotate: 0,
-        stretch: 0,
-        depth: 150,
-        modifier: 1,
-        slideShadows: false,
-      }}
-      breakpoints={{
-        700: {
-          spaceBetween: 0,
-          slidesPerView: 4,
-        },
-        500: {
-          spaceBetween: 100,
-          slidesPerView: 2,
-        },
-        411: {
-          spaceBetween: 100,
-          slidesPerView: 2,
-        },
-        300: {
-          spaceBetween: 0,
-          slidesPerView: 1,
-        },
-      }}
-    >
-      {albums.map((album, index) => {
-        return (
-          <SwiperSlide key={index}>
-            {( swiper ) => {
-              return (
-                <div className={swiper.isActive ? "album selected" : "album"}>
-                  <img src={album.cover_photo_url} alt="album" />
-                  <h3 className="album-name">{album.name.toUpperCase()}</h3>
-                  <h5 className="artist-name">{album.artist_name.toUpperCase()}</h5>
-                </div>  
-              );
-            }}
-          </SwiperSlide>
-        );
-      })}
-    </Swiper>
+  return albums && songs ? (
+    <>
+      <Swiper
+        effect="coverflow"
+        centeredSlides="true"
+        spaceBetween={0}
+        slidesPerView={3}
+        initialSlide={2}
+        loop="true"
+        onSlideChange={(swiper) => {
+          setOpen(false);
+          setTimeout(() => {
+            let length = albums.length ? albums.length : 5;
+            let index = (swiper.activeIndex % length) + 1;
+            index = index === albums.length ? 0 : index;  
+            console.log(albums.length);
+            setCurrent(index);
+            setOpen(true);
+          }, 500);
+        }}
+        coverflowEffect={{
+          rotate: 0,
+          stretch: 0,
+          depth: 150,
+          modifier: 1,
+          slideShadows: false,
+        }}
+        breakpoints={{
+          700: {
+            spaceBetween: 0,
+            slidesPerView: 4,
+          },
+          500: {
+            spaceBetween: 100,
+            slidesPerView: 2,
+          },
+          411: {
+            spaceBetween: 100,
+            slidesPerView: 2,
+          },
+          300: {
+            spaceBetween: 0,
+            slidesPerView: 1,
+          },
+        }}
+      >
+        {albums.map((album, index) => {
+          return (
+            <SwiperSlide key={index}>
+              {(slide) => {
+                return (
+                  <div className={slide.isActive ? "album selected" : "album"}>
+                    <img src={album.cover_photo_url} alt="album" />
+                    <h3 className="album-name">{album.name.toUpperCase()}</h3>
+                    <h5 className="artist-name">
+                      {album.artist_name.toUpperCase()}
+                    </h5>
+                  </div>
+                );
+              }}
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+      <Collapse in={open}>
+        <div className="song-list border border-secondary border-bottom-0">
+          {songs
+            .filter((song) => {
+              let album = albums[current];
+              return album ? song.album_id === album.id : false;
+            })
+            .sort((a, b) => {
+              return a.song_order - b.song_order;
+            })
+            .map((song, index) => {
+              return <Song song={song} key={index} />;
+            })}
+        </div>
+      </Collapse>
+    </>
+  ) : (
+    "Loading..."
   );
 };
 
