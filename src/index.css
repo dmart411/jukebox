@@ -7,13 +7,11 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-img {
-  width: 160px;
-  height: 160px;
-  margin-left: 25px;
-  margin-right: 25px;
-  margin-top: 15px;
-  margin-bottom: 0;
+.album-container {
+  width: 57.5%;
+  align-items: center;
+  margin: auto;
+  margin-top: 10%;
 }
 
 .album {
@@ -29,15 +27,27 @@ img {
   text-align: center;
   line-height: normal;
   white-space: initial;
+  cursor: pointer;
 }
 
 .selected {
   background-color: #00698C;
+  border-bottom: 0;
+}
+
+img {
+  width: 160px;
+  height: 160px;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 
 .album-name {
  color: #00698C; 
  margin-bottom: 0;
+ font-size: 18px;
 }
 
 .artist-name {
@@ -45,6 +55,7 @@ img {
   position: relative;
   top: 10px;
   margin-top: 0;
+  font-size: 14px;
 }
  
 .selected .album-name {
@@ -55,9 +66,93 @@ img {
   color: white;
 }
 
-.album-container {
-  width: 58.9%;
+.song-list {
+  justify-content: center;
   align-items: center;
+  width: 520px;
+  height: 100%;
+  opacity: 1;
+  text-align: center;
+  line-height: normal;
+  white-space: initial;
   margin: auto;
-  margin-top: 20%;
+}
+
+.song {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  height: 40px;
+  padding: 5px;
+  background-color: #F3F6F7;
+}
+
+.song:hover {
+  background-color: #0085B2;
+  color: white;
+}
+
+.track-number {
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  padding: 2px;
+  font-size: 12px;
+  vertical-align: middle;
+  background-color: #90B9C9;
+  color: white;
+}
+
+.favorite {
+  width: 30px;
+  font-size: 20px;
+  padding: 0px;
+  vertical-align: middle;
+  color: #DDDDDD;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.song:hover .favorite {
+  color: white;
+}
+
+.favorited {
+  color: #D9D900 !important;
+}
+
+.song-name {
+  width: 200px;
+  height: 20px;
+  padding: 1px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.label {
+  width: 80px;
+  height: 20px;
+  margin: 5px;
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 12px;
+  vertical-align: middle;
+  background-color: #DDDDDD;
+  color: black;
+}
+
+.song:hover .label {
+  background-color: #90B9C9;
+  color: white;
+}
+
+.track-time {
+  text-align: right;
+  width: 40px;
+  padding: 1px;
+  font-size: 15px;
+  margin-left: auto;
+  margin-right: 15px;
 }
