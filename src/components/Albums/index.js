@@ -53,7 +53,6 @@ const Albums = () => {
             let length = albums.length ? albums.length : 5;
             let index = (swiper.activeIndex % length) + 1;
             index = index === albums.length ? 0 : index;  
-            console.log(albums.length);
             setCurrent(index);
             setOpen(true);
           }, 500);
@@ -105,15 +104,13 @@ const Albums = () => {
       <Collapse in={open}>
         <div className="song-list border border-secondary border-bottom-0">
           {songs
-            .filter((song) => {
-              let album = albums[current];
-              return album ? song.album_id === album.id : false;
-            })
             .sort((a, b) => {
               return a.song_order - b.song_order;
             })
             .map((song, index) => {
-              return <Song song={song} key={index} />;
+              let album = albums[current];
+              console.log(album ? album.id === song.album_id : false)
+              return <Song song={song} key={index} active={album ? song.album_id === album.id : false}/>;
             })}
         </div>
       </Collapse>
