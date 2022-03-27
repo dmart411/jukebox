@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SwiperCore, { EffectCoverflow } from "swiper";
+import SwiperCore, { EffectCoverflow, Navigation, Thumbs } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Collapse } from "react-bootstrap";
 import axios from "axios";
@@ -14,6 +14,7 @@ const Albums = () => {
   const [albums, setAlbums] = useState([]);
   const [songs, setSongs] = useState([]);
   const [current, setCurrent] = useState();
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,10 +37,11 @@ const Albums = () => {
     fetchData();
   }, []);
 
-  SwiperCore.use([EffectCoverflow]);
+  SwiperCore.use([EffectCoverflow, Navigation, Thumbs]);
 
   return albums && songs ? (
     <>
+      <div className="back-btn btn shadow" id="swiper-back">←</div>
       <Swiper
         effect="coverflow"
         centeredSlides="true"
@@ -47,6 +49,7 @@ const Albums = () => {
         slidesPerView={3}
         initialSlide={2}
         loop="true"
+        navigation={{ nextEl: "#swiper-forward", prevEl: "#swiper-back" }}
         onSlideChange={(swiper) => {
           setOpen(false);
           setTimeout(() => {
@@ -88,7 +91,7 @@ const Albums = () => {
             <SwiperSlide key={index}>
               {(slide) => {
                 return (
-                  <div className={slide.isActive ? "album selected" : "album"}>
+                  <div className={slide.isActive ? "album selected shadow" : "album shadow-lg"}>
                     <img src={album.cover_photo_url} alt="album" />
                     <h3 className="album-name">{album.name.toUpperCase()}</h3>
                     <h5 className="artist-name">
@@ -102,7 +105,7 @@ const Albums = () => {
         })}
       </Swiper>
       <Collapse in={open}>
-        <div className="song-list border border-secondary border-bottom-0">
+        <div className="song-list shadow-lg">
           {songs
             .sort((a, b) => {
               return a.song_order - b.song_order;
@@ -113,6 +116,7 @@ const Albums = () => {
             })}
         </div>
       </Collapse>
+      <div className="btn next-btn shadow" id="swiper-forward">→</div>
     </>
   ) : (
     "Loading..."
