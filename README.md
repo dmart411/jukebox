@@ -1,3 +1,3 @@
-#JUKEBOX
+# Jukebox
 
 Technologies: React, Swiperjs, Bootstrap
