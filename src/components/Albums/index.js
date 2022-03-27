@@ -109,7 +109,6 @@ const Albums = () => {
             })
             .map((song, index) => {
               let album = albums[current];
-              console.log(album ? album.id === song.album_id : false)
               return <Song song={song} key={index} active={album ? song.album_id === album.id : false}/>;
             })}
         </div>
