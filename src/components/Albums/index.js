@@ -18,7 +18,7 @@ const Albums = () => {
   useEffect(() => {
     const fetchData = async () => {
       let allSongs = [];
-      axios.get("http://jukebox-proxy.herokuapp.com/albums").then((res) => {
+      axios.get("https://jukebox-proxy.herokuapp.com/albums").then((res) => {
         setAlbums(res.data);
         res.data.forEach((album) => {
           axios
