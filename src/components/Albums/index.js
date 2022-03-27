@@ -49,6 +49,7 @@ const Albums = () => {
         slidesPerView={3}
         initialSlide={2}
         loop="true"
+        onSwiper={setThumbsSwiper}
         navigation={{ nextEl: "#swiper-forward", prevEl: "#swiper-back" }}
         onSlideChange={(swiper) => {
           setOpen(false);
